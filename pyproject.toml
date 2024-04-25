@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "chat"
+version = "0.1.0"
+description = ""
+authors = ["jose <joseandrescolmenares02@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+streamlit = "1.33.0"
+python-dotenv = "^1.0.0"
+langchain="0.1.4"
+langchain_community="0.0.16"
+langchain_core="0.1.17"
+langchain_openai="0.0.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
