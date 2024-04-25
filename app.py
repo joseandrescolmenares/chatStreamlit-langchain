@@ -19,11 +19,20 @@ from langchain.schema import (
     HumanMessage,
     StrOutputParser,
 )
+
+from langchain_groq import ChatGroq
+
+
 from langchain.schema.messages import BaseMessageChunk
 from langchain.schema.runnable import Runnable, RunnableMap
 from langchain.vectorstores import Chroma
 
 load_dotenv()
+
+st.set_page_config(
+    page_title="Capturing User Feedback",
+    page_icon="🦜️️🛠️",
+)
 vectorstore = Chroma(
     collection_name="langchain_docs_app",
     persist_directory="data/chroma/langchain_docs_app/",
@@ -186,7 +195,8 @@ def reorder_documents(documents: list[Document]):
 def format_docs(docs: Sequence[Document]) -> str:
     formatted_docs: list[str] = []
     for i, doc in enumerate(docs):
-        doc_string = f"<doc id='{doc.metadata.get('original_index', i)}'>{doc.page_content}</doc>"
+        doc_string = f"<doc id='{doc.metadata.get('original_index', i)}'>{
+            doc.page_content}</doc>"
         formatted_docs.append(doc_string)
     return "\n".join(formatted_docs)
 
@@ -228,10 +238,11 @@ def create_answer_chain(
     return response_chain
 
 
-st.title("Chat with Langchain")
+st.title("Chat with Langchain.js")
+
 
 st.subheader(
-    "It uses a combination of keyword and semantic search to find answers.")
+    "🦜🛠️ hazme cualquier consulta langchain.js")
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -248,11 +259,11 @@ if prompt := st.chat_input("What is LangChain Expression Language?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
     # Display user message in chat message container
-    with st.chat_message("user"):
+    with st.chat_message("user",avatar="👨‍💻"):
         st.markdown(prompt)
 
     # Display assistant response in chat message container
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="🦜" ):
         # Create answer chain
         llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k")
 
@@ -273,8 +284,10 @@ if prompt := st.chat_input("What is LangChain Expression Language?"):
             use_chat_history=use_chat_history,
             k=6,
         )
+        
+            
 
-        message_placeholder = st.empty()
+        message_placeholder = st.empty() 
         full_response = ""
         for token in answer_chain.stream(
             {
@@ -284,8 +297,52 @@ if prompt := st.chat_input("What is LangChain Expression Language?"):
         ):
             full_response += token.content
             message_placeholder.markdown(full_response + "▌")
-
         message_placeholder.markdown(full_response)
+        
+
 
     st.session_state.messages.append(
-        {"role": "assistant", "content": full_response})
+        {"role": "assistant", "content": full_response })
+
+
+
+# if st.session_state.get("run_id"):
+#     run_id = st.session_state.run_id
+#     feedback = streamlit_feedback(
+#         feedback_type=feedback_option,
+#         optional_text_label="[Optional] Please provide an explanation",
+#         key=f"feedback_{run_id}",
+#     )
+
+#     # Define score mappings for both "thumbs" and "faces" feedback systems
+#     score_mappings = {
+#         "thumbs": {"👍": 1, "👎": 0},
+#         "faces": {"😀": 1, "🙂": 0.75, "😐": 0.5, "🙁": 0.25, "😞": 0},
+#     }
+
+#     # Get the score mapping based on the selected feedback option
+#     scores = score_mappings[feedback_option]
+
+#     if feedback:
+#         # Get the score from the selected feedback option's score mapping
+#         score = scores.get(feedback["score"])
+
+#         if score is not None:
+#             # Formulate feedback type string incorporating the feedback option
+#             # and score value
+#             feedback_type_str = f"{feedback_option} {feedback['score']}"
+
+#             # Record the feedback with the formulated feedback type string
+#             # and optional comment
+#             feedback_record = client.create_feedback(
+#                 run_id,
+#                 feedback_type_str,
+#                 score=score,
+#                 comment=feedback.get("text"),
+#             )
+#             st.session_state.feedback = {
+#                 "feedback_id": str(feedback_record.id),
+#                 "score": score,
+#             }
+#         else:
+#             st.warning("Invalid feedback score.")

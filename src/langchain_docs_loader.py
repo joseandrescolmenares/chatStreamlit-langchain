@@ -16,11 +16,11 @@ from tenacity import retry, stop_after_attempt, wait_random_exponential
 class LangchainDocsLoader(BaseLoader):
     """A loader for the Langchain documentation.
 
-    The documentation is available at https://python.langchain.com/.
+    The documentation is available at https://js.langchain.com/.
     """
 
-    _sitemap: str = "https://python.langchain.com/sitemap.xml"
-    _filter_urls: List[str] = ["https://python.langchain.com/"]
+    _sitemap: str = "https://js.langchain.com/sitemap.xml"
+    _filter_urls: List[str] = ["https://js.langchain.com/"]
 
     def __init__(
         self,
@@ -60,7 +60,7 @@ class LangchainDocsLoader(BaseLoader):
         urls = [
             url.text
             for url in root.findall(".//sitemap:loc", namespaces=namespaces)
-            if url.text is not None and url.text != "https://python.langchain.com/"
+            if url.text is not None and url.text != "https://js.langchain.com/"
         ]
 
         return urls
@@ -169,8 +169,7 @@ class LangchainDocsLoader(BaseLoader):
                             classes = parent.attrs.get("class", "")
 
                             language = next(
-                                filter(lambda x: re.match(
-                                    r"language-\w+", x), classes),
+                                filter(lambda x: re.match(r"language-\w+", x), classes),
                                 None,
                             )
                             if language is None:
@@ -220,8 +219,7 @@ class LangchainDocsLoader(BaseLoader):
                         "class", [""]
                     ):
                         tabs = child.find_all("li", {"role": "tab"})
-                        tab_panels = child.find_all(
-                            "div", {"role": "tabpanel"})
+                        tab_panels = child.find_all("div", {"role": "tabpanel"})
                         for tab, tab_panel in zip(tabs, tab_panels):
                             tab_name = tab.get_text(strip=True)
                             yield f"{tab_name}\n"
