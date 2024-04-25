@@ -30,7 +30,7 @@ from langchain.vectorstores import Chroma
 load_dotenv()
 
 st.set_page_config(
-    page_title="Capturing User Feedback",
+    page_title="Chat-langchain.js",
     page_icon="🦜️️🛠️",
 )
 vectorstore = Chroma(
